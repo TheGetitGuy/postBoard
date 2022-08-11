@@ -1,0 +1,27 @@
+doctype html
+html
+  head
+    meta(charset='UTF-8')
+    title Main Page
+    script(type="text/javascript" src="/static/blog.js")
+    link(rel="stylesheet" href="/static/blog.css")
+  body
+    div.topBar
+      h1 Post Board
+      p.
+        This is made using the Pug.js Templating engine and Express.js.
+      p.
+        Feel free to post random dumb stuff <3
+      form(method="POST" action="https://StarryWirelessViruses.joethegetitguy.repl.co/post")
+        input(required maxlenght="20" type="text" name="header" placeholder="Name")
+
+        input(required maxlenght="160" type="text" name="bodyText" placeholder="Thoughts")
+
+        button(type="submit")
+          div submit
+
+    each id in data 
+      div.post
+        p= id['header']
+        p= id['body']
+    
