@@ -26,10 +26,18 @@ let handleDatabaseSorting = (data) => {
 app.set('view engine', 'pug')
 
 app.use('/static', express.static(PATH.join(__dirname, 'static')))
+
+app.post('/post/erase', (req, res) => {
+  if (req.body.givenKey === process.env['ClearKey']) {
+    db.empty()
+    res.send('Erased db')
+  } else { res.send('Bad Pass') }
+}
+)
 app.get('/post/erase', (req, res) => {
-  db.empty()
-  res.send('Erased db')
+  res.send(pug.renderFile('./views/erase.pug'))
 })
+
 app.get('/', async (req, res) => {
   let dataBaseObject = await db.getAll()
   dataBaseObject = handleDatabaseSorting(dataBaseObject)
@@ -40,7 +48,6 @@ app.get('/', async (req, res) => {
 
 app.post('/post', async (req, res) => {
   let dbItems = await db.list()
-  
   let objectToAdd = { header: req.body.header, body: req.body.bodyText }
   db.set(dbItems.length + 1, objectToAdd)
   res.redirect('/')
