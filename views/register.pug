@@ -1,0 +1,14 @@
+doctype html
+html
+  head
+    meta(charset='UTF-8')
+    title Register 
+  body
+    h1 Register
+    a(href="./")
+      div Already Registered? Login.
+    form(method="POST" action="/register/submit")
+      input(type='text' name='username' placeholder="username" required)
+      input(type='text' name='password' placeholder="password" required)
+      button(type='submit')
+        div Register

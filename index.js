@@ -1,14 +1,26 @@
 const port = 3002
-const express = require('express')
-const app = express()
-const Database = require("@replit/database")
+const express = require("express")
+const app = express();
+const Database = require("@replit/database");
 const db = new Database();
-const PATH = require('path')
-const pug = require('pug')
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
+
+const PATH = require('path');
+const pug = require('pug');
+
+
+
+app.set('view engine', 'pug')
 //middlewares for handling forms and stuff
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+//setting static path
+app.use('/static', express.static(PATH.join(__dirname, 'static')))
+db.set('posts', [])
+db.set('users', [])
+
 
 //takes the database and flips it so newest is first
 let handleDatabaseSorting = (data) => {
@@ -22,38 +34,73 @@ let handleDatabaseSorting = (data) => {
   })
   return workingData
 }
+app.get('/', async (req, res) => {
+  res.send(pug.renderFile('./views/login.pug'))
+})
+app.get('/register', async (req, res) => {
+  res.send(pug.renderFile('./views/register.pug'))
+})
 
-app.set('view engine', 'pug')
+app.get('/main', async (req, res) => {
+  let dataBaseObject = await db.get('posts')
+  //dataBaseObject = handleDatabaseSorting(dataBaseObject)
+  console.log(dataBaseObject)
 
-app.use('/static', express.static(PATH.join(__dirname, 'static')))
+  res.send(pug.renderFile('./views/blog.pug', { data: dataBaseObject }))
+})
+
+app.post('/post', async (req, res) => {
+  let dbItems = await db.get('posts')
+  let objectToAdd = { header: req.body.header, body: req.body.bodyText }
+  dbItems.push(objectToAdd)
+  db.set('posts', dbItems)
+  res.redirect('/main')
+})
 
 app.post('/post/erase', (req, res) => {
   //handle the erase request
   if (req.body.givenkey == process.env['ClearKey']) {
-    db.empty()
-    res.send('Erased db')
-  } else { res.send('Bad Pass') }
-}
-)
+    db.delete('posts')
+    res.send('Erased Posts')
+  } else { res.send('Bad password, get lost loser.') }
+})
+
 app.get('/post/erase', (req, res) => {
   //go to the erase page
   res.send(pug.renderFile('./views/erase.pug'))
 })
 
-app.get('/', async (req, res) => {
-  let dataBaseObject = await db.getAll()
-  dataBaseObject = handleDatabaseSorting(dataBaseObject)
-  console.log(dataBaseObject)
-
-  res.send(pug.renderFile('./views/blog.pug', { data: dataBaseObject, database: db }))
+app.post('/login/submit', async (req, res) => {
+  const users = await db.get('users')
+  let match = false
+  for (let user in users) {
+    if (users[user].username === req.body.username) {
+      match = await bcrypt.compare(req.body.password, users[user].password)
+    }
+  }
+  if (match) {
+    res.redirect('/main')
+  } else {
+    res.redirect('/register')
+  }
 })
 
-app.post('/post', async (req, res) => {
-  let dbItems = await db.list()
-  let objectToAdd = { header: req.body.header, body: req.body.bodyText }
-  db.set(dbItems.length + 1, objectToAdd)
-  res.redirect('/')
+app.post('/register/submit', async (req, res) => {
+  const users = await db.get('users')
+  for (let user in users) {
+    console.log(users[user])
+    if (users[user].username == req.body.username) {
+      return // should break out of creating user
+    }
+  }
+  console.log('past the loopn this means a user was made')
+  bcrypt.hash(req.body.password, saltRounds, function(err, hash) {
+    users.push({ username: req.body.username, password: hash })
+    db.set('users', users)
+    res.redirect('/')
+  })
 })
+
 
 app.listen(port, () => {
 })

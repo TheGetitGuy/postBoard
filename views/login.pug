@@ -1,0 +1,14 @@
+doctype html
+html
+  head
+    meta(charset='UTF-8')
+    title Login 
+  body
+    h1 Please login
+    a(href="./register")
+      div Not Registered?
+    form(method="POST" action="/login/submit")
+      input(type='text' name='username' placeholder="username" required)
+      input(type='text' name='password' placeholder="password" required)
+      button(type='submit')
+        div Login
