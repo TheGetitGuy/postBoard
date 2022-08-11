@@ -28,13 +28,15 @@ app.set('view engine', 'pug')
 app.use('/static', express.static(PATH.join(__dirname, 'static')))
 
 app.post('/post/erase', (req, res) => {
-  if (req.body.givenKey === process.env['ClearKey']) {
+  //handle the erase request
+  if (req.body.givenkey == process.env['ClearKey']) {
     db.empty()
     res.send('Erased db')
   } else { res.send('Bad Pass') }
 }
 )
 app.get('/post/erase', (req, res) => {
+  //go to the erase page
   res.send(pug.renderFile('./views/erase.pug'))
 })
 
