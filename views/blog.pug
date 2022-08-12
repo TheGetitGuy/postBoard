@@ -10,18 +10,17 @@ html
       h1 Post Board
       p.
         This is made using the Pug.js Templating engine and Express.js.
+      h2 #{name}
       p.
-        Feel free to post random dumb stuff <3
+        feel free to post random dumb stuff <3
       form(method="POST" action="./post")
-        input(required maxlenght="20" type="text" name="header" placeholder="Name")
-
-        input(required maxlenght="160" type="text" name="bodyText" placeholder="Thoughts")
+        input(required maxlength="160" type="text" name="bodyText" placeholder="Thoughts")
 
         button(type="submit")
           div submit
 
     each id in data 
       div.post
-        p= id['header']
+        p.userName= id['user']
         p= id['body']
     

@@ -5,21 +5,28 @@ const Database = require("@replit/database");
 const db = new Database();
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
-
-
+const session = require('express-session');
+const SECRET = process.env['ClearKey']
 const PATH = require('path');
 const pug = require('pug');
 
+//db.set('posts', [])//use these to clear
+//db.set('users', [])
 
 
 app.set('view engine', 'pug')
 //middlewares for handling forms and stuff
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
+app.use(session({
+  secret: SECRET, cookie: {
+    maxAge: 60000,
+  }
+}));
 //setting static path
 app.use('/static', express.static(PATH.join(__dirname, 'static')))
-db.set('posts', [])
-db.set('users', [])
 
 
 //takes the database and flips it so newest is first
@@ -27,7 +34,7 @@ let handleDatabaseSorting = (data) => {
   let workingData = []
   let reverseKeys = Object.keys(data).reverse()
   reverseKeys.forEach(key => {
-    if (data[key].header) {
+    if (data[key].user) {
       console.log(key)
       workingData.push(data[key])
     } else db.remove(key)
@@ -35,23 +42,29 @@ let handleDatabaseSorting = (data) => {
   return workingData
 }
 app.get('/', async (req, res) => {
-  res.send(pug.renderFile('./views/login.pug'))
+  if (req.session.loggedin) {
+    res.redirect('/main') //if logged in goto main
+  } res.send(pug.renderFile('./views/login.pug'))
 })
 app.get('/register', async (req, res) => {
   res.send(pug.renderFile('./views/register.pug'))
 })
 
 app.get('/main', async (req, res) => {
-  let dataBaseObject = await db.get('posts')
-  //dataBaseObject = handleDatabaseSorting(dataBaseObject)
-  console.log(dataBaseObject)
+  if (req.session.loggedin) {
+    let dataBaseObject = await db.get('posts')
+    dataBaseObject.reverse()
+    console.log(dataBaseObject)
 
-  res.send(pug.renderFile('./views/blog.pug', { data: dataBaseObject }))
+    res.send(pug.renderFile('./views/blog.pug', { data: dataBaseObject, name: req.session.loggedin.name }))
+  } else {
+    res.redirect('/')
+  }
 })
 
 app.post('/post', async (req, res) => {
   let dbItems = await db.get('posts')
-  let objectToAdd = { header: req.body.header, body: req.body.bodyText }
+  let objectToAdd = { user: req.session.loggedin.name, body: req.body.bodyText }
   dbItems.push(objectToAdd)
   db.set('posts', dbItems)
   res.redirect('/main')
@@ -60,7 +73,7 @@ app.post('/post', async (req, res) => {
 app.post('/post/erase', (req, res) => {
   //handle the erase request
   if (req.body.givenkey == process.env['ClearKey']) {
-    db.delete('posts')
+    db.set('posts', [])
     res.send('Erased Posts')
   } else { res.send('Bad password, get lost loser.') }
 })
@@ -79,6 +92,7 @@ app.post('/login/submit', async (req, res) => {
     }
   }
   if (match) {
+    req.session.loggedin = { name: req.body.username }
     res.redirect('/main')
   } else {
     res.redirect('/register')
