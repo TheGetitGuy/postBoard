@@ -20,9 +20,9 @@ app.set('view engine', 'pug')
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.use(session({
+app.use(session({ //using session middleware for data
   secret: SECRET, cookie: {
-    maxAge: 60000,
+    maxAge: 6000000,
   }
 }));
 //setting static path
@@ -42,16 +42,17 @@ let handleDatabaseSorting = (data) => {
   return workingData
 }
 app.get('/', async (req, res) => {
-  if (req.session.loggedin) {
+  if (req.session.loggedin !== undefined) {
     res.redirect('/main') //if logged in goto main
-  } res.send(pug.renderFile('./views/login.pug'))
+  }
+  res.send(pug.renderFile('./views/login.pug'))
 })
 app.get('/register', async (req, res) => {
   res.send(pug.renderFile('./views/register.pug'))
 })
 
 app.get('/main', async (req, res) => {
-  if (req.session.loggedin) {
+  if (req.session.loggedin !== undefined) {
     let dataBaseObject = await db.get('posts')
     dataBaseObject.reverse()
     console.log(dataBaseObject)
@@ -84,6 +85,7 @@ app.get('/post/erase', (req, res) => {
 })
 
 app.post('/login/submit', async (req, res) => {
+  //await req.session.regenerate()
   const users = await db.get('users')
   let match = false
   for (let user in users) {
