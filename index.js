@@ -6,7 +6,7 @@ const db = new Database();
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const session = require('express-session');
-const SECRET = process.env['ClearKey']
+const SECRET = process.env['ClearKey'];
 const PATH = require('path');
 const pug = require('pug');
 

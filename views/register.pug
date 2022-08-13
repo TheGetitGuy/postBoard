@@ -3,12 +3,18 @@ html
   head
     meta(charset='UTF-8')
     title Register 
+    link(rel="stylesheet" href="/static/login.css")
   body
-    h1 Register
-    a(href="./")
-      div Already Registered? Login.
-    form(method="POST" action="/register/submit")
-      input(type='text' name='username' placeholder="username" required)
-      input(type='password' name='password' placeholder="password" required)
-      button(type='submit')
-        div Register
+    div.titleHolder
+      h1 Register
+    div.formHolder
+      div.link
+        a(href="./")
+          div Already Registered? Login.
+      form(method="POST" action="/register/submit")
+        div
+          input(type='text' name='username' placeholder="username" required)
+          input(type='password' name='password' placeholder="password" required)
+        div.buttonHolder
+          button(type='submit')
+            div Register

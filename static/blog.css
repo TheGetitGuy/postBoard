@@ -1,12 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300&display=swap');
+h1{
+  text-align:center;
+}
+h2{
+  text-align:center;
+  border-bottom:solid;
+  color:#C2C25A
+}
+body{
+  display:flex;
+  flex-flow:column;
+  align-items:center;
+  font-family: 'Rubik', sans-serif; 
+}
 .post{
-  position:relative;
-  background-color:lightgrey; 
+  position:relative;  
+    box-shadow:4px 4px 1px black;
+  background-color:#2a9d8f;
   padding: 5px;
   margin:1px; 
-  max-width:5in;
+  width:100%;
   word-wrap:break-word;
+  color:#FFFFFF;
 }
-.post:nth-child(2){
+.postContainer{
+  max-width:5in;
+}
+.post:nth-child(1){
   border-top-right-radius:10px;
   border-top-left-radius:10px;
 }
@@ -14,9 +34,8 @@
   border-bottom-left-radius:10px;
   border-bottom-right-radius:10px;
 }
-.post + p { 
-  max-width:100%;
-  background-color:lightcyan;
+.post + p {-
+  max-width:100%; 
 }
 .topBar{
   margin:5px;
@@ -24,14 +43,28 @@
 .topBar > form > input{
   margin:2px;
 }
-.closeButton{
-  line-height:0px;
-  width:2em;
-  height:2em;
-  position:absolute;
-  top:0.5em;
-  right:0.5em;
+
+button{ 
+  font-size:1rem;
+  box-shadow:4px 4px 1px black;
+  background-color:#2a9d8f;
+  color:#FFFFFF;
+  padding:10px;
+  margin: 5px;
+  border:none;
+  border-radius:2px;
 }
 .userName{
-  color:#f58fad;
+  color:#C2C25A !important;
+}
+.formHolder{
+  display:flex;
+  flex-flow:column;
+  align-items:center;
+  justify-content:center;
+}
+form  > input{
+  margin:1px;
+  border-style:none;
+  border-bottom-style:solid;
 }

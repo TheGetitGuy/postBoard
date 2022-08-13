@@ -1,0 +1,47 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300&display=swap');
+
+.titleHolder{
+  font-family: 'Rubik', sans-serif; 
+  text-align:center;
+}
+.formHolder{
+  display:flex;
+  flex-flow:column;
+  align-items:center;
+  justify-content:center;
+}
+form > div > input{
+  margin:1px;
+  border-style:none;
+  border-bottom-style:solid;
+}
+form > div >input:focus{
+  border:none;
+}
+.buttonHolder{
+  position:relative;
+  display:flex; 
+  width:100%;
+}
+button{ 
+  font-size:1rem;
+  box-shadow:4px 4px 1px black;
+  background-color:#2a9d8f;
+  color:#FFFFFF;
+  padding:10px;
+  position:absolute;
+  right:0;
+  margin: 5px;
+  border:none;
+  border-radius:2px;
+}
+button:hover{
+transform:scale(1.1);
+}
+button:active{
+transform:scale(0.9);
+}
+.link{
+  margin:5px;
+  
+}

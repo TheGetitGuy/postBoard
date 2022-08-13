@@ -13,14 +13,16 @@ html
       h2 #{name}
       p.
         feel free to post random dumb stuff <3
-      form(method="POST" action="./post")
-        input(required maxlength="160" type="text" name="bodyText" placeholder="Thoughts")
+      div.formHolder
+        form(method="POST" action="./post")
+          input(required maxlength="160" type="text" name="bodyText" placeholder="Thoughts")
 
-        button(type="submit")
-          div submit
-
-    each id in data 
-      div.post
-        p.userName= id['user']
-        p= id['body']
+        div.buttonHolder
+          button(type="submit")
+            div submit
+    div.postContainer
+      each id in data 
+        div.post
+          p.userName= id['user']
+          p= id['body']
     
