@@ -53,9 +53,13 @@ button{
   background-color:#2a9d8f;
   color:#FFFFFF;
   padding:10px;
-  margin: 5px;
+  margin: 5px 0px;
   border:none;
   border-radius:2px;
+}
+.buttonHolder{
+
+  width:100%;
 }
 .userName{
   color:#C2C25A !important;
@@ -63,7 +67,7 @@ button{
 .formHolder{
   display:flex;
   flex-flow:column;
-  align-items:center;
+  align-items:left;
   justify-content:center;
 }
 form  > input{
